@@ -1,3 +1,18 @@
+<!DOCTYPE html>
 <html>
-  <a>Test</a>
-</html>
+  <body onclick="test()">
+    <div id="editor" contentEditable="true"></div>
+  </body>
+  <script>
+    document.addEventListener('selectionchange', () => {
+      console.log(window.getSelection())
+    })
+  </script>
+</html> 
+
+<script>
+  function test(){
+    var x = document.activeElement.id;
+    console.log(window.getSelection())
+  }
+</script>
