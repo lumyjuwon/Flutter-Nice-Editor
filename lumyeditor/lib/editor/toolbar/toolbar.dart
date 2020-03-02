@@ -1,31 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
 import 'exec_command.dart';
 
-// class ToolBar {
-//   final WebView webView;
-//   final WebViewController webViewController;
-
-//   const ToolBar(this.webView, this.webViewController);
-
-//   void execCommand(CommandName name,
-//       [ShowDefaultUI showDefaultUI, ValueArgument argument]) {
-//     final String command = createCommand(name, showDefaultUI, argument);
-//     webViewController.evaluateJavascript(command);
-//   }
-// }
-
 class Toolbar extends StatefulWidget {
-  final WebViewController webViewController;
-  Toolbar(this.webViewController) : super();
+  final FlutterWebviewPlugin flutterWebviewPlugin;
+  Toolbar(this.flutterWebviewPlugin) : super();
 
   @override
   _ToolbarState createState() => _ToolbarState();
 
   void execCommand(CommandName name, [bool showDefaultUI, String argument]) {
     final String command = createCommand(name, showDefaultUI, argument);
-    webViewController.evaluateJavascript(command);
+    flutterWebviewPlugin.evalJavascript(command);
   }
 }
 

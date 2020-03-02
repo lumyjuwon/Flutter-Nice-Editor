@@ -1,7 +1,7 @@
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
-final toolbarChannel = JavascriptChannel(
-    name: 'toolbarChannel',
+final selectionChannel = JavascriptChannel(
+    name: 'selectionChannel',
     onMessageReceived: (JavascriptMessage message) {
       print(message);
     });

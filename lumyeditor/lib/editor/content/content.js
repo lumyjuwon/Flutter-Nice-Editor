@@ -4,4 +4,5 @@ function getParentNodes(selection) {
 
 document.addEventListener("selectionchange", () => {
   window.getSelection();
+  console.log("2");
 });

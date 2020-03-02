@@ -1,9 +1,7 @@
-import 'dart:convert';
-
-import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:lumyeditor/editor/toolbar.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:lumyeditor/editor/content/content.dart';
+import 'package:lumyeditor/editor/toolbar/toolbar.dart';
 
 class Editor extends StatefulWidget {
   Editor() : super();
@@ -12,34 +10,18 @@ class Editor extends StatefulWidget {
   _EditorState createState() => _EditorState();
 }
 
-class _EditorState extends State<Editor> {
-  WebViewController _controller;
+class _EditorState extends State<Editor> with WidgetsBindingObserver {
+  final flutterWebviewPlugin = new FlutterWebviewPlugin();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: <Widget>[
-          Toolbar(_controller),
-          Expanded(
-            child: WebView(
-              initialUrl: '',
-              javascriptMode: JavascriptMode.unrestricted,
-              onWebViewCreated: (WebViewController webViewController) {
-                _controller = webViewController;
-                _loadHtmlFromAssets();
-              },
-            ),
-          )
+          Toolbar(flutterWebviewPlugin),
+          Expanded(child: Content()),
         ],
       ),
     );
-  }
-
-  _loadHtmlFromAssets() async {
-    String fileText = await rootBundle.loadString('assets/editor.html');
-    _controller.loadUrl(Uri.dataFromString(fileText,
-            mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
-        .toString());
   }
 }
