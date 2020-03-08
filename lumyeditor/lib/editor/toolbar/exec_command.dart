@@ -1,6 +1,7 @@
 enum CommandName {
   fontSize,
   bold,
+  strikethrough,
 }
 
 String enumToString(CommandName name) {

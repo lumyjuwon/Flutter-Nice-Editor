@@ -1,18 +1,30 @@
 <!DOCTYPE html>
 <html>
-  <body onclick="test()">
+  <body>
     <div id="editor" contentEditable="true"></div>
   </body>
   <script>
+    const checkNode = (targetNode) => {
+      const noeds = []
+
+      while(targetNode.nodeName != 'DIV'){
+        noeds.push(targetNode.nodeName)
+        targetNode = targetNode.parentNode;
+      }
+
+      return noeds;
+    }
+
+    const getAttributions = (focusNode) => {
+      return checkNode(focusNode.parentNode).join();
+    }
+
     document.addEventListener('selectionchange', () => {
-      console.log(window.getSelection())
+      const focusNode = document.getSelection().focusNode;
+      if(focusNode){
+        selectionChannel.postMessage(getAttributions(focusNode));
+      }
     })
   </script>
 </html> 
 
-<script>
-  function test(){
-    var x = document.activeElement.id;
-    console.log(window.getSelection())
-  }
-</script>
