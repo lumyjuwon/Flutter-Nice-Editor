@@ -4,6 +4,7 @@ import 'package:lumyeditor/editor/toolbar/selection_info.dart';
 enum TagName { FONT, B, STRIKE }
 
 const Color defaultColor = Color.fromARGB(0xFF, 0x00, 0x00, 0x00);
+const Color defaultChangedColor = Color.fromARGB(0XFF, 0xF0, 0x3F, 0x2F);
 
 class Menu extends StatefulWidget {
   final Icon icon;
@@ -31,9 +32,8 @@ class Menu extends StatefulWidget {
 class _MenuState extends State<Menu> {
   Color _getColor() {
     if (widget.isChangableColor) {
-      print(widget.selection.contains(widget.tagName));
       if (widget.selection.contains(widget.tagName)) {
-        return Color.fromARGB(0XFF, 0xF0, 0x3F, 0x2F);
+        return defaultChangedColor;
       }
       return defaultColor;
     }
