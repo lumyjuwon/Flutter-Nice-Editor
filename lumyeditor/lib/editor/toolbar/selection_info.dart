@@ -1,6 +1,8 @@
-import 'package:lumyeditor/editor/toolbar/menu.dart';
 import 'package:lumyeditor/utils/enum.dart';
 
+enum TagName { FONT, B, STRIKE }
+
+/// [SelectionInfo]
 class SelectionInfo {
   final String selectionTags;
 

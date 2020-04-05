@@ -1,10 +1,12 @@
 const type = {
   Caret: "Caret",
-  Range: "Range"
+  Range: "Range",
 };
 
-const checkNode = targetNode => {
+const checkNode = (targetNode) => {
   const noeds = [];
+
+  console.log(targetNode);
 
   while (targetNode.nodeName != "DIV") {
     noeds.push(targetNode.nodeName);
@@ -14,13 +16,14 @@ const checkNode = targetNode => {
   return noeds;
 };
 
-const getTags = focusNode => {
-  return checkNode(focusNode.parentNode).join();
+const getAttributions = (focusNode) => {
+  return checkNode(focusNode).join();
 };
 
 document.addEventListener("selectionchange", () => {
   const focusNode = document.getSelection().focusNode;
+
   if (focusNode) {
-    selectionChannel.postMessage(getTags(focusNode));
+    selectionChannel.postMessage(getAttributions(focusNode));
   }
 });

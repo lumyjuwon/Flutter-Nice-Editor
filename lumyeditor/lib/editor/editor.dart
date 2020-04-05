@@ -4,22 +4,12 @@ import 'package:lumyeditor/editor/content/content.dart';
 import 'package:lumyeditor/editor/toolbar/selection_info.dart';
 import 'package:lumyeditor/editor/toolbar/toolbar.dart';
 
-enum Position{
-  Top,
-  Bottom
-}
-
-const Map<String,String> mockData = 
-  {
-    'id': '001',
-    'image': 'http://placehold.it/45x45?text=test',
-  };
-
+enum Position { Top, Bottom }
 
 class Editor extends StatefulWidget {
   // Toolbar
   final Position position;
-  final  test;
+  final test;
 
   const Editor({this.position = Position.Top, this.test}) : super();
 
@@ -29,11 +19,12 @@ class Editor extends StatefulWidget {
 
 class _EditorState extends State<Editor> with WidgetsBindingObserver {
   final FlutterWebviewPlugin flutterWebviewPlugin = new FlutterWebviewPlugin();
-  final ValueNotifier<SelectionInfo> selectionListener = new ValueNotifier(new SelectionInfo(''));
+  final ValueNotifier<SelectionInfo> selectionListener =
+      new ValueNotifier(new SelectionInfo(''));
 
   @override
   Widget build(BuildContext context) {
-    if(widget.position == Position.Top){
+    if (widget.position == Position.Top) {
       return Scaffold(
         body: Column(
           children: <Widget>[
@@ -49,8 +40,7 @@ class _EditorState extends State<Editor> with WidgetsBindingObserver {
           ],
         ),
       );
-    }
-    else{
+    } else {
       return Scaffold(
         body: Column(
           children: <Widget>[
@@ -59,10 +49,11 @@ class _EditorState extends State<Editor> with WidgetsBindingObserver {
               selectionListener: selectionListener,
             ),
             Expanded(
-                child: Toolbar(
-              webviewPlugin: flutterWebviewPlugin,
-              selectionListener: selectionListener,
-            ),),
+              child: Toolbar(
+                webviewPlugin: flutterWebviewPlugin,
+                selectionListener: selectionListener,
+              ),
+            ),
           ],
         ),
       );

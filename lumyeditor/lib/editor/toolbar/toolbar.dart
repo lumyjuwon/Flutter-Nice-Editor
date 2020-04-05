@@ -3,7 +3,7 @@ import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:lumyeditor/editor/toolbar/menu.dart';
 import 'package:lumyeditor/editor/toolbar/selection_info.dart';
 
-import 'exec_command.dart';
+import 'commands.dart';
 
 class Toolbar extends StatefulWidget {
   final FlutterWebviewPlugin webviewPlugin;
@@ -15,7 +15,7 @@ class Toolbar extends StatefulWidget {
   _ToolbarState createState() => _ToolbarState();
 
   void execCommand(CommandName name, [bool showDefaultUI, String argument]) {
-    final String command = createCommand(name, showDefaultUI, argument);
+    final String command = createExecCommand(name, showDefaultUI, argument);
     webviewPlugin.evalJavascript(command);
   }
 }
@@ -26,6 +26,7 @@ class _ToolbarState extends State<Toolbar> {
   @override
   void initState() {
     super.initState();
+
     widget.selectionListener.addListener(() {
       this.setState(() {
         selection = widget.selectionListener.value;
@@ -44,6 +45,7 @@ class _ToolbarState extends State<Toolbar> {
           tooltip: 'Increase volume by 10',
           onPressed: () {},
           selection: this.selection,
+          expandMenu: ExpandMenu([]),
         ),
         Menu(
           tagName: TagName.B,
