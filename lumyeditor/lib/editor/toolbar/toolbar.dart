@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
-import 'package:lumyeditor/editor/toolbar/menu.dart';
-import 'package:lumyeditor/editor/toolbar/selection_info.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
-import 'commands.dart';
+import 'package:lumyeditor/editor/content/selection_info.dart';
+import 'package:lumyeditor/editor/editor.dart';
+import 'package:lumyeditor/editor/toolbar/command_manager.dart';
+import 'package:lumyeditor/editor/toolbar/button/menu.dart';
+import 'package:lumyeditor/editor/toolbar/button/expand_menu.dart';
 
 class Toolbar extends StatefulWidget {
-  final FlutterWebviewPlugin webviewPlugin;
+  final Position position;
   final ValueNotifier selectionListener;
+  final WebViewController webviewController;
 
-  Toolbar({this.webviewPlugin, this.selectionListener}) : super();
+  Toolbar(
+      {@required this.position,
+      @required this.webviewController,
+      @required this.selectionListener})
+      : super();
 
   @override
   _ToolbarState createState() => _ToolbarState();
-
-  void execCommand(CommandName name, [bool showDefaultUI, String argument]) {
-    final String command = createExecCommand(name, showDefaultUI, argument);
-    webviewPlugin.evalJavascript(command);
-  }
 }
 
 class _ToolbarState extends State<Toolbar> {
@@ -28,6 +30,7 @@ class _ToolbarState extends State<Toolbar> {
     super.initState();
 
     widget.selectionListener.addListener(() {
+      print(widget.selectionListener.value);
       this.setState(() {
         selection = widget.selectionListener.value;
       });
@@ -38,22 +41,54 @@ class _ToolbarState extends State<Toolbar> {
   Widget build(BuildContext context) {
     return Row(
       children: <Widget>[
-        Menu(
-          tagName: TagName.FONT,
-          icon: Icon(Icons.format_size),
-          iconSize: 32.0,
-          tooltip: 'Increase volume by 10',
-          onPressed: () {},
-          selection: this.selection,
-          expandMenu: ExpandMenu([]),
-        ),
+        ExpandMenu(
+            position: widget.position,
+            icon: Icon(Icons.format_size),
+            iconSize: 32.0,
+            tooltip: 'Increase volume by 10',
+            menus: [
+              Menu(
+                tagName: TagName.B,
+                icon: Icon(Icons.format_bold),
+                iconSize: 32.0,
+                tooltip: 'Increase volume by 10',
+                onPressed: () {
+                  CommandManager.execCommand(widget.webviewController,
+                      CommandManager.createExecCommand(CommandName.bold));
+
+                  CommandManager.execCommand(widget.webviewController,
+                      CommandManager.createCheckExecCommand(TagName.B));
+                },
+                selection: this.selection,
+              ),
+              Menu(
+                tagName: TagName.STRIKE,
+                icon: Icon(Icons.format_strikethrough),
+                iconSize: 32.0,
+                tooltip: 'Increase volume by 10',
+                onPressed: () {
+                  CommandManager.execCommand(
+                      widget.webviewController,
+                      CommandManager.createExecCommand(
+                          CommandName.strikethrough));
+
+                  CommandManager.execCommand(widget.webviewController,
+                      CommandManager.createCheckExecCommand(TagName.STRIKE));
+                },
+                selection: this.selection,
+              )
+            ]),
         Menu(
           tagName: TagName.B,
           icon: Icon(Icons.format_bold),
           iconSize: 32.0,
           tooltip: 'Increase volume by 10',
           onPressed: () {
-            widget.execCommand(CommandName.bold);
+            CommandManager.execCommand(widget.webviewController,
+                CommandManager.createExecCommand(CommandName.bold));
+
+            CommandManager.execCommand(widget.webviewController,
+                CommandManager.createCheckExecCommand(TagName.B));
           },
           selection: this.selection,
         ),
@@ -63,7 +98,11 @@ class _ToolbarState extends State<Toolbar> {
           iconSize: 32.0,
           tooltip: 'Increase volume by 10',
           onPressed: () {
-            widget.execCommand(CommandName.strikethrough);
+            CommandManager.execCommand(widget.webviewController,
+                CommandManager.createExecCommand(CommandName.strikethrough));
+
+            CommandManager.execCommand(widget.webviewController,
+                CommandManager.createCheckExecCommand(TagName.STRIKE));
           },
           selection: this.selection,
         )

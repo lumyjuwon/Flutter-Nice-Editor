@@ -77,9 +77,9 @@ packages:
   flutter_webview_plugin:
     dependency: "direct main"
     description:
-      name: flutter_webview_plugin
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "flutter_webview_plugin-0.3.10+1-lumy"
+      relative: true
+    source: path
     version: "0.3.10+1"
   image:
     dependency: transitive
@@ -197,7 +197,7 @@ packages:
       name: webview_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.19+7"
+    version: "0.3.19+9"
   xml:
     dependency: transitive
     description:

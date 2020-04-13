@@ -1,62 +1,72 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+
 import 'package:lumyeditor/editor/content/content.dart';
-import 'package:lumyeditor/editor/toolbar/selection_info.dart';
+import 'package:lumyeditor/editor/content/selection_info.dart';
 import 'package:lumyeditor/editor/toolbar/toolbar.dart';
 
 enum Position { Top, Bottom }
 
 class Editor extends StatefulWidget {
-  // Toolbar
   final Position position;
-  final test;
 
-  const Editor({this.position = Position.Top, this.test}) : super();
+  const Editor({this.position = Position.Top}) : super();
 
   @override
   _EditorState createState() => _EditorState();
 }
 
-class _EditorState extends State<Editor> with WidgetsBindingObserver {
-  final FlutterWebviewPlugin flutterWebviewPlugin = new FlutterWebviewPlugin();
+class _EditorState extends State<Editor> {
   final ValueNotifier<SelectionInfo> selectionListener =
       new ValueNotifier(new SelectionInfo(''));
+  WebViewController webviewController;
+
+  void initController(WebViewController controller) {
+    if (webviewController == null) {
+      this.setState(() {
+        webviewController = controller;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     if (widget.position == Position.Top) {
       return Scaffold(
-        body: Column(
+        body: Stack(
           children: <Widget>[
-            Toolbar(
-              webviewPlugin: flutterWebviewPlugin,
-              selectionListener: selectionListener,
-            ),
-            Expanded(
-                child: Content(
-              webviewPlugin: flutterWebviewPlugin,
-              selectionListener: selectionListener,
-            )),
-          ],
-        ),
-      );
-    } else {
-      return Scaffold(
-        body: Column(
-          children: <Widget>[
-            Content(
-              webviewPlugin: flutterWebviewPlugin,
-              selectionListener: selectionListener,
-            ),
-            Expanded(
-              child: Toolbar(
-                webviewPlugin: flutterWebviewPlugin,
-                selectionListener: selectionListener,
+            Padding(
+              padding: EdgeInsets.only(top: 40),
+              child: Content(
+                selectionListener: this.selectionListener,
+                initController: this.initController,
               ),
             ),
+            Toolbar(
+              position: widget.position,
+              selectionListener: this.selectionListener,
+              webviewController: this.webviewController,
+            ),
           ],
         ),
       );
+    } else if (widget.position == Position.Bottom) {
+      return Scaffold(
+          body: Column(
+        children: <Widget>[
+          Expanded(
+            child: Content(
+              selectionListener: this.selectionListener,
+              initController: this.initController,
+            ),
+          ),
+          Toolbar(
+            position: widget.position,
+            selectionListener: this.selectionListener,
+            webviewController: this.webviewController,
+          ),
+        ],
+      ));
     }
   }
 }

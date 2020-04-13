@@ -35,11 +35,10 @@ class _MyHomePageState extends State<MyHomePage> {
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.check),
-              onPressed: () {
-              },
+              onPressed: () {},
             )
           ],
         ),
-        body: Editor());
+        body: Editor(position: Position.Top));
   }
 }
