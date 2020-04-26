@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lumyeditor/editor/editor.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(DearEditorApp());
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class DearEditorApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -12,21 +11,21 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Lumy Editor'),
+      home: DearEditorPage(title: 'Dear Editor'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class DearEditorPage extends StatefulWidget {
+  DearEditorPage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _DearEditorPageState createState() => _DearEditorPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _DearEditorPageState extends State<DearEditorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

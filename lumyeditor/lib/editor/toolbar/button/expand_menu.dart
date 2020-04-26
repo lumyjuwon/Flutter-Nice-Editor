@@ -1,47 +1,71 @@
 import 'package:flutter/material.dart';
 
-import 'package:lumyeditor/editor/toolbar/button/menu.dart';
 import 'package:lumyeditor/editor/editor.dart';
+
+OverlayEntry overlayEntry;
+OverlayState overlayState;
+final Map<int, bool> overlayParentWidget = {};
+
+OverlayEntry createOverlayEntry(
+    BuildContext context, Position position, List<Widget> menus) {
+  RenderBox renderBox = context.findRenderObject();
+  Size size = renderBox.size;
+  Offset offset = renderBox.localToGlobal(Offset.zero);
+
+  return OverlayEntry(
+      builder: (context) => Positioned(
+          left: offset.dx,
+          top: position == Position.Top
+              ? offset.dy + size.height
+              : offset.dy - size.height,
+          child: Material(
+            child: Row(
+              children: menus,
+            ),
+          )));
+}
+
+void showOverlay(BuildContext context, Position position, List<Widget> menus) {
+  overlayState = Overlay.of(context);
+  overlayEntry = createOverlayEntry(context, position, menus);
+  overlayState.insert(overlayEntry);
+}
+
+void closeOverlay() {
+  if (overlayEntry != null) {
+    overlayEntry.remove();
+    overlayEntry = null;
+  }
+}
 
 class ExpandMenu extends StatefulWidget {
   final Position position;
   final Icon icon;
   final double iconSize;
   final String tooltip;
-  final List<Menu> menus;
+  final List<Widget> menus;
 
-  const ExpandMenu(
-      {this.position, this.icon, this.iconSize, this.tooltip, this.menus});
+  const ExpandMenu({
+    Key key,
+    this.position,
+    this.icon,
+    this.iconSize,
+    this.tooltip,
+    this.menus,
+  }) : super(key: key);
 
   @override
   _ExpandMenuState createState() => _ExpandMenuState();
 }
 
 class _ExpandMenuState extends State<ExpandMenu> {
-  OverlayEntry _overlayEntry;
-  bool _hasFocus = false;
+  int contextHashCode;
 
   @override
   void initState() {
     super.initState();
-  }
 
-  OverlayEntry _createOverlayEntry() {
-    RenderBox renderBox = context.findRenderObject();
-    Size size = renderBox.size;
-    Offset offset = renderBox.localToGlobal(Offset.zero);
-
-    return OverlayEntry(
-        builder: (context) => Positioned(
-            left: offset.dx,
-            top: widget.position == Position.Top
-                ? offset.dy + size.height
-                : offset.dy - size.height,
-            child: Material(
-              child: Row(
-                children: widget.menus,
-              ),
-            )));
+    contextHashCode = context.hashCode;
   }
 
   @override
@@ -50,69 +74,24 @@ class _ExpandMenuState extends State<ExpandMenu> {
       icon: widget.icon,
       iconSize: widget.iconSize,
       onPressed: () {
-        if (this._hasFocus) {
-          this._overlayEntry.remove();
-        } else {
-          this._overlayEntry = _createOverlayEntry();
-          Overlay.of(context).insert(this._overlayEntry);
-        }
+        assert(overlayParentWidget.length <= 1);
 
-        this.setState(() {
-          _hasFocus = !_hasFocus;
-        });
+        if (overlayParentWidget.containsKey(contextHashCode)) {
+          if (overlayParentWidget[contextHashCode]) {
+            closeOverlay();
+          } else {
+            showOverlay(context, widget.position, widget.menus);
+          }
+          overlayParentWidget[contextHashCode] =
+              !overlayParentWidget[contextHashCode];
+        } else {
+          closeOverlay();
+          showOverlay(context, widget.position, widget.menus);
+
+          overlayParentWidget.clear();
+          overlayParentWidget.addAll({contextHashCode: true});
+        }
       },
-      tooltip: widget.tooltip,
     );
-    // return Scaffold(
-    //   body: Padding(
-    //     padding: const EdgeInsets.all(50.0),
-    //     child: Form(
-    //       child: ListView(
-    //         children: <Widget>[
-    //           TextFormField(
-    //             decoration: InputDecoration(labelText: 'Address'),
-    //           ),
-    //           SizedBox(
-    //             height: 16.0,
-    //           ),
-    //           TextFormField(
-    //             decoration: InputDecoration(labelText: 'City'),
-    //           ),
-    //           SizedBox(
-    //             height: 16.0,
-    //           ),
-    //           TextFormField(
-    //             decoration: InputDecoration(labelText: 'Address'),
-    //           ),
-    //           SizedBox(
-    //             height: 16.0,
-    //           ),
-    //           RaisedButton(
-    //             child: Text('SUBMIT'),
-    //             onPressed: () {
-    //               // submit the form
-    //             },
-    //           )
-    //         ],
-    //       ),
-    //     ),
-    //   ),
-    // );
-    // return Scaffold(
-    //   body: Padding(
-    //     padding: EdgeInsets.all(16.0),
-    //     child: Form(
-    //         child: Column(
-    //       children: <Widget>[
-    //         IconButton(
-    //           icon: widget.icon,
-    //           iconSize: widget.iconSize,
-    //           onPressed: () {},
-    //           tooltip: widget.tooltip,
-    //         )
-    //       ],
-    //     )),
-    //   ),
-    // );
   }
 }

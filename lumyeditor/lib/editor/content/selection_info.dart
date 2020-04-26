@@ -1,6 +1,18 @@
-import 'package:lumyeditor/utils/enum.dart';
+import 'package:lumyeditor/utils/util.dart';
 
-enum TagName { FONT, B, STRIKE }
+/// [TagName] used in seperating the kind of ui and html node
+enum TagName {
+  FONT,
+  B,
+  I,
+  U,
+  STRIKE,
+  LEFT,
+  CENTER,
+  RIGHT,
+  BACKCOLOR,
+  FORECOLOR
+}
 
 /// [SelectionInfo]
 class SelectionInfo {
@@ -8,8 +20,16 @@ class SelectionInfo {
 
   SelectionInfo(this.selectionTags);
 
-  bool contains(TagName tagName) {
-    final String _tagName = enumToString(tagName);
-    return selectionTags.contains(_tagName);
+  bool contains(TagName tag) {
+    final String tagName = enumToString(tag);
+    List<String> tags = selectionTags.split(',');
+
+    for (int index = 0; index < tags.length; index++) {
+      if (tags[index] == tagName) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

@@ -20,16 +20,18 @@ class Menu extends StatefulWidget {
   final Color activeColor;
 
   const Menu({
+    Key key,
     @required this.icon,
     @required this.iconSize,
+    @required this.tagName,
     this.tooltip,
     this.onPressed,
-    @required this.tagName,
     this.selection,
     this.isChangableColor = true,
     this.unactiveColor = defaultUnactiveColor,
     this.activeColor = defaultActiveColor,
-  }) : assert(onPressed != null);
+  })  : assert(onPressed != null),
+        super(key: key);
 
   @override
   _MenuState createState() => _MenuState();
@@ -37,9 +39,6 @@ class Menu extends StatefulWidget {
 
 class _MenuState extends State<Menu> {
   Color _getColor() {
-    print(widget.selection);
-    print(widget.tagName.toString());
-
     if (widget.isChangableColor) {
       if (widget.selection == null) {
         return widget.unactiveColor;

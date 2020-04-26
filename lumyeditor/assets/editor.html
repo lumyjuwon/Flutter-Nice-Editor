@@ -4,5 +4,68 @@
     <div id="editor" contentEditable="true"></div>
     <!-- <script type="text/javascript" src="selection.js"></script> -->
   </body>
+  <script>
+
+  const type = {
+    Caret: "Caret",
+    Range: "Range",
+  };
+
+  const checkNode = (targetNode) => {
+    const noeds = [];
+
+    while (targetNode.nodeName != "DIV") {
+      noeds.push(targetNode.nodeName);
+      targetNode = targetNode.parentNode;
+    }
+
+    // DIV Node can get CSS
+    const nodeStyles = targetNode.style
+
+    if(nodeStyles.textAlign.length != 0){
+      noeds.push(nodeStyles.textAlign.toUpperCase());
+    }
+
+    return noeds;
+  };
+
+  const getAttributions = (focusNode) => {
+    return checkNode(focusNode).join();
+  };
+
+  const getCurrentCommandState = () => {
+    if (commandNames && tagNames) {
+      let commandStateAttributions = "";
+
+      commandNames.forEach((command, index) => {
+        let commandState = document.queryCommandState(command);
+
+        if (commandState) {
+          if(commandStateAttributions.length == 0){
+            commandStateAttributions += tagNames[index];
+          }
+          else{
+            commandStateAttributions += "," + tagNames[index];
+          }
+        }
+      });
+
+      console.log(commandStateAttributions);
+
+      return commandStateAttributions;
+    }
+  };
+
+  document.addEventListener("selectionchange", () => {
+    const focusNode = document.getSelection().focusNode;
+
+    console.log(document.getSelection());
+
+    if (focusNode) {
+      selectionChannel.postMessage(getAttributions(focusNode));
+    }
+  });
+
+  </script>
 </html> 
 

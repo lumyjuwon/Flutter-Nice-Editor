@@ -31,42 +31,36 @@ class _EditorState extends State<Editor> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.position == Position.Top) {
-      return Scaffold(
-        body: Stack(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(top: 40),
-              child: Content(
-                selectionListener: this.selectionListener,
-                initController: this.initController,
-              ),
-            ),
-            Toolbar(
-              position: widget.position,
-              selectionListener: this.selectionListener,
-              webviewController: this.webviewController,
-            ),
-          ],
-        ),
-      );
-    } else if (widget.position == Position.Bottom) {
-      return Scaffold(
-          body: Column(
-        children: <Widget>[
-          Expanded(
-            child: Content(
-              selectionListener: this.selectionListener,
-              initController: this.initController,
-            ),
-          ),
-          Toolbar(
-            position: widget.position,
-            selectionListener: this.selectionListener,
-            webviewController: this.webviewController,
-          ),
-        ],
-      ));
-    }
+    return Scaffold(
+      body: Column(
+        children: widget.position == Position.Top
+            ? <Widget>[
+                Toolbar(
+                  position: widget.position,
+                  selectionListener: this.selectionListener,
+                  webviewController: this.webviewController,
+                ),
+                Expanded(
+                  child: Content(
+                    selectionListener: this.selectionListener,
+                    initController: this.initController,
+                  ),
+                ),
+              ]
+            : <Widget>[
+                Expanded(
+                  child: Content(
+                    selectionListener: this.selectionListener,
+                    initController: this.initController,
+                  ),
+                ),
+                Toolbar(
+                  position: widget.position,
+                  selectionListener: this.selectionListener,
+                  webviewController: this.webviewController,
+                ),
+              ],
+      ),
+    );
   }
 }
